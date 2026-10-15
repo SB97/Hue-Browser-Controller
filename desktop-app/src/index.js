@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, screen } = require('electron');
 const path = require('path');
   
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
@@ -63,6 +63,44 @@ const createWindow = () => {
 };
 
 
+
+// Moves the window while the custom title bar from preload.js is dragged.
+// -webkit-app-region alone doesn't work reliably for windows created hidden.
+let dragTimer = null;
+const stopDrag = () => {
+  clearInterval(dragTimer);
+  dragTimer = null;
+};
+ipcMain.on('titlebar-drag-start', (e) => {
+  const win = BrowserWindow.fromWebContents(e.sender);
+  if (!win) return;
+  stopDrag();
+  const start = screen.getCursorScreenPoint();
+  if (win.isMaximized()) {
+    // Restore and keep the cursor at the same relative spot on the bar
+    const maxBounds = win.getBounds();
+    const ratio = (start.x - maxBounds.x) / maxBounds.width;
+    win.unmaximize();
+    const b = win.getBounds();
+    win.setBounds({ x: Math.round(start.x - b.width * ratio), y: start.y - 16, width: b.width, height: b.height });
+  }
+  // Keep width/height fixed, setPosition can grow the window on fractional DPI scaling
+  const bounds = win.getBounds();
+  const offsetX = start.x - bounds.x;
+  const offsetY = start.y - bounds.y;
+  dragTimer = setInterval(() => {
+    if (win.isDestroyed()) return stopDrag();
+    const p = screen.getCursorScreenPoint();
+    win.setBounds({ x: p.x - offsetX, y: p.y - offsetY, width: bounds.width, height: bounds.height });
+  }, 10);
+});
+ipcMain.on('titlebar-drag-end', stopDrag);
+ipcMain.on('titlebar-toggle-maximize', (e) => {
+  const win = BrowserWindow.fromWebContents(e.sender);
+  if (!win) return;
+  if (win.isMaximized()) win.unmaximize();
+  else win.maximize();
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
