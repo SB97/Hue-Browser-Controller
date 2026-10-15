@@ -16,10 +16,16 @@ const createWindow = () => {
     minWidth: 475,
     minHeight: 450,
     autoHideMenuBar: true,
-    titleBarOverlay: {
-      color: '#2f3241',
-      symbolColor: '#7669e7'
-    },
+    // Electron 17 can't darken the native Windows title bar, so hide it and draw
+    // dark window controls instead (the drag bar itself is added in preload.js)
+    ...(process.platform === 'win32' && {
+      titleBarStyle: 'hidden',
+      titleBarOverlay: {
+        color: '#202020',
+        symbolColor: '#ffffff',
+        height: 32
+      }
+    }),
     backgroundColor: '#000000',
     show: false,
     webPreferences: {
