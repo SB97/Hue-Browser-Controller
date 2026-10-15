@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-A static website (no build step, no package manager, no tests, no linter) that controls Philips Hue lights by calling the Hue Bridge's local REST API (v1, `http://<bridge-ip>/api/<token>/...`) directly from the browser. Deployed via GitHub Pages from the `deploy` branch. The same page is also loaded by a separate "Open Hue Controller" desktop app (installers in `downloads/`, linked from `download.html`); that app's source is not in this repo.
+A static website (no build step, no package manager, no tests, no linter) that controls Philips Hue lights by calling the Hue Bridge's local REST API (v1, `http://<bridge-ip>/api/<token>/...`) directly from the browser. Deployed via GitHub Pages from the `deploy` branch. The same page is also loaded by a separate "Open Hue Controller" desktop app (installers in `downloads/`, linked from `download.html`). That app's Electron main/preload code is in `desktop-app/` (see its README); the installers in `downloads/` were built before it was added and are not rebuilt automatically.
 
 ## Running
 
@@ -29,7 +29,7 @@ All JS is plain global-scope scripts — no modules. `index.html` loads them in 
 
 ### Desktop app hook
 
-When run inside the desktop app, `window.desktopApp` exists and its window stays hidden until `window.desktopApp.ready()` is called. `signalAppReady()` in `login.js` must be called on every path that finishes painting the first view (login screen shown, dashboard rendered, or error). In a normal browser `window.desktopApp` is undefined and this is a no-op.
+When run inside the desktop app (`desktop-app/src/preload.js`), `window.desktopApp` exists and its window stays hidden until `window.desktopApp.ready()` is called. `signalAppReady()` in `login.js` must be called on every path that finishes painting the first view (login screen shown, dashboard rendered, or error). In a normal browser `window.desktopApp` is undefined and this is a no-op.
 
 ### Vendored code
 

@@ -1,0 +1,39 @@
+{
+  "name": "Hue-App-Controller",
+  "productName": "Open Hue Controller",
+  "version": "1.0.2",
+  "description": "The Open Hue Controller enables you to control all your Philips Hue lighting from the app.",
+  "main": "src/index.js",
+  "author": "Jakob Lykke",
+  "license": "MIT",
+  "config": {
+    "forge": {
+      "packagerConfig": {},
+      "makers": [
+        {
+          "name": "@electron-forge/maker-squirrel",
+          "config": {
+            "name": "Open_Hue_Controller"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-zip",
+          "platforms": [
+            "darwin"
+          ]
+        },
+        {
+          "name": "@electron-forge/maker-deb",
+          "config": {}
+        },
+        {
+          "name": "@electron-forge/maker-rpm",
+          "config": {}
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
+  }
+}
