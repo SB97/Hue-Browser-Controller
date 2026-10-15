@@ -7,6 +7,12 @@ const refreshTime = 1500;
 const postJsonObj = {devicetype: "Hue-Browser-Controller"};
 checkQueryArgs().then(checkLocalStorage);
 
+// Desktop app: the window stays hidden until the first real view is painted
+function signalAppReady() {
+    if (window.desktopApp)
+        requestAnimationFrame(() => requestAnimationFrame(window.desktopApp.ready));
+}
+
 function checkQueryArgs() {
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token")
@@ -31,10 +37,13 @@ function checkLocalStorage() {
             document.getElementById("overlay").style.display = "none";
             console.error("Local storage was incorrect - " + err);
             localStorage.removeItem("hueAcc");
+            signalAppReady();
         });
     }
-    else 
+    else {
         document.getElementById("overlay").style.display = "none";
+        signalAppReady();
+    }
 }
 
 //<NewConnection>
@@ -192,8 +201,12 @@ function setDashboard() {
         document.getElementById("refreshBtn").addEventListener("click", setDashboard); 
         document.getElementById("logOutBtn").addEventListener("click", logOut);
         document.getElementById("saveSettingsBtn").addEventListener("click", saveSettings);
+        signalAppReady();
     }).catch(err => {
         document.getElementById("overlay").style.display = "none";
+        // alert() below blocks before the next frame, so show the window right away
+        if (window.desktopApp)
+            window.desktopApp.ready();
         console.error(err);
         alert("A problem occurred while connecting to the Philips Hue Bridge. Please try again.");
         logOut();
