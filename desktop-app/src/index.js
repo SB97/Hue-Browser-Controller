@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, screen, session, shell } = require('electron');
 const path = require('path');
 
 const createWindow = () => {
@@ -113,7 +113,15 @@ ipcMain.on('titlebar-toggle-maximize', (e) => {
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on('ready', createWindow);
+app.on('ready', () => {
+  // Protocol-relative URLs in the website ("//host/...") become file://host/... in the app,
+  // which Windows tries to open as a network share (\\host\...). That blocks page loading
+  // for ~10s, so cancel them right away.
+  session.defaultSession.webRequest.onBeforeRequest({ urls: ['file://*/*'] }, (details, callback) => {
+    callback({ cancel: new URL(details.url).host !== '' });
+  });
+  createWindow();
+});
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits
