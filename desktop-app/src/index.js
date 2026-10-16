@@ -1,6 +1,14 @@
 const { app, BrowserWindow, ipcMain, screen, session, shell } = require('electron');
 const path = require('path');
 
+// Without this Electron uses its own default AppUserModelID ("electron.app.<name>"), which doesn't
+// match the one electron-builder puts on the Start menu/desktop shortcuts (build.appId). Windows then
+// can't link the running window to a shortcut and offers no "Pin to taskbar".
+// Must equal build.appId in package.json (electron-builder strips "build" from the packaged copy).
+if (process.platform === 'win32') {
+  app.setAppUserModelId('com.electron.hue-app-controller');
+}
+
 const createWindow = () => {
   const title = `Open Hue Controller ${app.getVersion()}`;
   // Create the browser window.
