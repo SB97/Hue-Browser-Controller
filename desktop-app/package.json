@@ -1,7 +1,7 @@
 {
   "name": "Hue-App-Controller",
   "productName": "Open Hue Controller",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The Open Hue Controller enables you to control all your Philips Hue lighting from the app.",
   "main": "src/index.js",
   "author": "Jakob Lykke",
