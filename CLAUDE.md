@@ -31,6 +31,8 @@ All JS is plain global-scope scripts — no modules. `index.html` loads them in 
 
 When run inside the desktop app (`desktop-app/src/preload.js`), `window.desktopApp` exists and its window stays hidden until `window.desktopApp.ready()` is called. `signalAppReady()` in `login.js` must be called on every path that finishes painting the first view (login screen shown, dashboard rendered, or error). In a normal browser `window.desktopApp` is undefined and this is a no-op. `window.desktopApp.version` and `.exePath` (passed from the main process via `additionalArguments`) are shown in the title bar and in a "Desktop app" section of the settings modal.
 
+`desktop-app/scripts/copy-web.js` copies the website into the app and strips the cookie consent banner, Google Analytics and the "Update Cookies" button from `index.html` (website-only). It matches them by the `<!-- Cookie Consent` … `<!-- end of Google Analytics-->` comments and `id="open_preferences_center"`, and fails the build if those change.
+
 ### Vendored code
 
 `bootstrap-5.0.0-dist/`, `js/qrcode.min.js` and `libraries/rgb-color-converter/` are third-party; don't edit them.
