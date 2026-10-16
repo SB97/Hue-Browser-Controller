@@ -23,6 +23,20 @@ class DashboardPage {
 
     const connectedLink = `${document.location.protocol}//${document.location.host}${document.location.pathname}?token=${acc.token}&ip=${acc.ip}`;
 
+    // Only shown inside the desktop app (see desktop-app/src/preload.js)
+    let desktopAppHtml = "";
+    if (window.desktopApp) {
+      const exePath = (window.desktopApp.exePath || "").replace(/&/g, "&amp;").replace(/</g, "&lt;");
+      desktopAppHtml = `<h2 class="fs-4">Desktop app</h2>
+                <h3 class="fs-5 text-muted">Running app</h3>
+                <table class="table">
+                  <tbody>
+                    <tr><th class="text-muted" scope="row">Version:</th><td>${window.desktopApp.version}</td></tr>
+                    <tr><th class="text-muted" scope="row">Executable:</th><td class="text-break">${exePath}</td></tr>
+                  </tbody>
+                </table>`;
+    }
+
     let header = `<div class="container pt-4">
       <header class="pb-3 mb-4">
         <div class="top-bar">
@@ -102,6 +116,7 @@ class DashboardPage {
                 <button type="button" id="logOutBtn" class="btn btn-outline-danger my-2 btn-round">Logout</button>
                 <p class="mb-1">This will remove the saved hue login details from the website's local storage. This means the you will not automatically log in when you enter the website.</p>
                 <p>You can still log in with the same details after this.</p>
+                ${desktopAppHtml}
                 </div>
               <div class="modal-footer">
                 <button type="button" class="btn btn-secondary btn-round" id="saveSettingsBtn" data-bs-dismiss="modal">Save settings</button>

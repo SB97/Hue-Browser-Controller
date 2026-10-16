@@ -2,8 +2,10 @@ const { app, BrowserWindow, ipcMain, screen, shell } = require('electron');
 const path = require('path');
 
 const createWindow = () => {
+  const title = `Open Hue Controller ${app.getVersion()}`;
   // Create the browser window.
   const mainWindow = new BrowserWindow({
+    title: title,
     icon: path.join(__dirname, "/icons/512x512.png"),
     width: 1200,
     height: 700,
@@ -23,9 +25,16 @@ const createWindow = () => {
     backgroundColor: '#000000',
     show: false,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js')
+      preload: path.join(__dirname, 'preload.js'),
+      // Read by preload.js and shown in the title bar and the settings
+      additionalArguments: [
+        `--app-version=${app.getVersion()}`,
+        `--app-exe-path=${process.execPath}`
+      ]
     }
   });
+  // Keep the version in the title instead of the page's <title>
+  mainWindow.on('page-title-updated', (e) => e.preventDefault());
   // Stay hidden until the page reports that the dashboard (or login) is rendered.
   let shown = false;
   const showWindow = () => {

@@ -1,7 +1,18 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-// Lets the page tell the main process it has rendered its first real view
+// Values passed by index.js via webPreferences.additionalArguments
+const getArg = (name) => {
+  const prefix = `--${name}=`;
+  const arg = process.argv.find((a) => a.startsWith(prefix));
+  return arg ? arg.slice(prefix.length) : '';
+};
+const version = getArg('app-version');
+const exePath = getArg('app-exe-path');
+
 contextBridge.exposeInMainWorld('desktopApp', {
+  version: version,
+  exePath: exePath,
+  // Lets the page tell the main process it has rendered its first real view
   ready: () => ipcRenderer.send('app-ready')
 });
 
@@ -21,7 +32,7 @@ if (process.platform === 'win32') {
     document.head.appendChild(style);
     const bar = document.createElement('div');
     bar.id = 'desktopTitleBar';
-    bar.textContent = document.title || 'Open Hue Controller';
+    bar.textContent = `Open Hue Controller ${version}`;
     document.body.prepend(bar);
 
     // Window dragging is done by the main process (see titlebar-drag-start in index.js)

@@ -29,7 +29,7 @@ All JS is plain global-scope scripts — no modules. `index.html` loads them in 
 
 ### Desktop app hook
 
-When run inside the desktop app (`desktop-app/src/preload.js`), `window.desktopApp` exists and its window stays hidden until `window.desktopApp.ready()` is called. `signalAppReady()` in `login.js` must be called on every path that finishes painting the first view (login screen shown, dashboard rendered, or error). In a normal browser `window.desktopApp` is undefined and this is a no-op.
+When run inside the desktop app (`desktop-app/src/preload.js`), `window.desktopApp` exists and its window stays hidden until `window.desktopApp.ready()` is called. `signalAppReady()` in `login.js` must be called on every path that finishes painting the first view (login screen shown, dashboard rendered, or error). In a normal browser `window.desktopApp` is undefined and this is a no-op. `window.desktopApp.version` and `.exePath` (passed from the main process via `additionalArguments`) are shown in the title bar and in a "Desktop app" section of the settings modal.
 
 ### Vendored code
 
