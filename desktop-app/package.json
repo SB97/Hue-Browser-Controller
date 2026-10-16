@@ -6,34 +6,35 @@
   "main": "src/index.js",
   "author": "Jakob Lykke",
   "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "Open_Hue_Controller"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
+  "scripts": {
+    "copy-web": "node scripts/copy-web.js",
+    "start": "node scripts/copy-web.js && electron .",
+    "dist": "node scripts/copy-web.js && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.electron.hue-app-controller",
+    "productName": "Open Hue Controller",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "src/icons/512x512.png"
+    },
+    "nsis": {
+      "guid": "148df3fa-1076-550e-a134-9db94946afb2",
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "${productName} Setup ${version} Windows.${ext}"
     }
   },
-  "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+  "devDependencies": {
+    "electron": "17.1.2",
+    "electron-builder": "26.15.3"
   }
 }

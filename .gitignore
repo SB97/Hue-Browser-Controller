@@ -1,0 +1,12 @@
+desktop-app/node_modules/
+desktop-app/dist/
+
+# Website copied into the desktop app by desktop-app/scripts/copy-web.js
+desktop-app/src/index.html
+desktop-app/src/css/
+desktop-app/src/js/
+desktop-app/src/img/
+desktop-app/src/svg/
+desktop-app/src/libraries/
+desktop-app/src/bootstrap-5.0.0-dist/
+desktop-app/src/favicon/

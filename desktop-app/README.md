@@ -1,18 +1,22 @@
 # Open Hue Controller (desktop app)
 
-Electron wrapper around the website in the repo root. Only the app-specific files live here: `src/index.js` (main process), `src/preload.js` (exposes `window.desktopApp.ready()`), `src/icons/` and `package.json`.
+Electron wrapper around the website in the repo root. Only the app-specific files live here: `src/index.js` (main process), `src/preload.js` (exposes `window.desktopApp.ready()`), `src/icons/`, `scripts/copy-web.js` and `package.json`.
 
-## Building
+## Building (Windows)
 
-The main process loads `src/index.html`, so the website has to be copied into `src/` before packaging:
+Requires Node.js (LTS).
 
 ```sh
-cp -r ../index.html ../css ../js ../img ../svg ../libraries ../bootstrap-5.0.0-dist src/
-npm install --save-dev electron @electron-forge/cli @electron-forge/maker-squirrel @electron-forge/maker-zip
-npx electron-forge make
+npm ci           # or `npm install` the first time, to create package-lock.json
+npm start        # run the app locally
+npm run dist     # build dist/Open Hue Controller Setup <version> Windows.exe
 ```
 
-Don't commit the copied website files or `node_modules/`.
+Both scripts first run `scripts/copy-web.js`, which copies the website from the repo root into `src/` (the main process loads `src/index.html`). The copied files, `node_modules/` and `dist/` are git-ignored.
+
+The installer is built with electron-builder (NSIS, per-machine install to `C:\Program Files\Open Hue Controller\`). Electron is pinned to 17.1.2, the version of the released 1.0.2 installer. `nsis.guid` is the uninstall key of that installer, so a new build upgrades an existing installation instead of installing next to it. Don't change it.
+
+To release a new version, bump `version` in `package.json` before building.
 
 ## Patching an existing installation
 
