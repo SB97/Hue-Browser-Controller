@@ -12,11 +12,13 @@ for (const entry of entries) {
   fs.cpSync(path.join(root, entry), dest, { recursive: true });
 }
 
-// The cookie consent banner and Google Analytics are only meant for the website.
+// The cookie consent banner, Google Analytics and the link to the app's own download
+// page are only meant for the website (download.html isn't even copied).
 // Fail the build if a pattern no longer matches, so they can't silently slip back in.
 const removeFromHtml = [
   /[ \t]*<!-- Cookie Consent[\s\S]*?<!-- end of Google Analytics-->\r?\n/,
-  /[ \t]*<a [^>]*id="open_preferences_center"[^>]*>.*?<\/a>\r?\n/
+  /[ \t]*<a [^>]*id="open_preferences_center"[^>]*>.*?<\/a>\r?\n/,
+  /[ \t]*<a [^>]*id="downloadBtn"[^>]*>.*?<\/a>\r?\n/
 ];
 const indexPath = path.join(target, 'index.html');
 let html = fs.readFileSync(indexPath, 'utf8');

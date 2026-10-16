@@ -44,7 +44,7 @@ class DashboardPage {
             <span class="fs-4 text-white">Open Hue Controller</span>
           </a>
           <div class="d-flex flex-row-reverse top-bar-right">
-            <a class="nav-link link-white" href="download.html">Download</a>
+            ${window.desktopApp ? "" : `<a class="nav-link link-white" href="download.html">Download</a>`}
             <a class="nav-link link-white" type="button" data-bs-toggle="modal" data-bs-target="#SettingsModal" >Settings</a>
           </div>
         </div>
