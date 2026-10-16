@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, screen } = require('electron');
+const { app, BrowserWindow, ipcMain, screen, shell } = require('electron');
 const path = require('path');
 
 const createWindow = () => {
@@ -10,8 +10,8 @@ const createWindow = () => {
     minWidth: 475,
     minHeight: 450,
     autoHideMenuBar: true,
-    // Electron 17 can't darken the native Windows title bar, so hide it and draw
-    // dark window controls instead (the drag bar itself is added in preload.js)
+    // Hide the native Windows title bar and draw dark window controls instead
+    // (the drag bar itself is added in preload.js)
     ...(process.platform === 'win32' && {
       titleBarStyle: 'hidden',
       titleBarOverlay: {
@@ -46,14 +46,19 @@ const createWindow = () => {
   // Open the DevTools.
   //mainWindow.webContents.openDevTools();
 
-  var handleRedirect = (e, url) => {
-    if(url != mainWindow.webContents.getURL()) {
+  // Open external links (e.g. target="_blank") in the default browser instead of the app
+  var isExternal = (url) => url != mainWindow.webContents.getURL()
+  mainWindow.webContents.on('will-navigate', (e, url) => {
+    if(isExternal(url)) {
       e.preventDefault()
-      require('electron').shell.openExternal(url)
+      shell.openExternal(url)
     }
-  }
-  mainWindow.webContents.on('will-navigate', handleRedirect)
-  mainWindow.webContents.on('new-window', handleRedirect)
+  })
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if(!isExternal(url)) return { action: 'allow' }
+    shell.openExternal(url)
+    return { action: 'deny' }
+  })
 };
 
 
