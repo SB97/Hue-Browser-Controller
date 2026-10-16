@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-A static website (no build step, no package manager, no tests, no linter) that controls Philips Hue lights by calling the Hue Bridge's local REST API (v1, `http://<bridge-ip>/api/<token>/...`) directly from the browser. Deployed via GitHub Pages from the `deploy` branch. The same page is also loaded by a separate "Open Hue Controller" desktop app (installers in `downloads/`, linked from `download.html`). That app's Electron main/preload code and its electron-builder config are in `desktop-app/` (see its README for building the Windows installer); the installers in `downloads/` are not rebuilt automatically.
+A static website (no build step, no package manager, no tests, no linter) that controls Philips Hue lights by calling the Hue Bridge's local REST API (v1, `http://<bridge-ip>/api/<token>/...`) directly from the browser. Deployed via GitHub Pages from the `main` branch. The same page is also loaded by a separate "Open Hue Controller" desktop app (installers in `downloads/`, linked from `download.html`). That app's Electron main/preload code and its electron-builder config are in `desktop-app/` (see its README for building the Windows installer); the installers in `downloads/` are not rebuilt automatically.
 
 ## Running
 
